@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMonitor Enterprise Cloud | Ultimate ERP Suite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div id="loginSection" class="login-container">
+        <div class="login-box animate-pop">
+            <h2>EduMonitor Cloud ERP</h2>
+            <p>Institutional Resources & Operations Hub</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>User Registration ID</label>
+                    <input type="text" id="loginId" placeholder="e.g., ADMIN01, STU101" required>
+                </div>
+                <div class="form-group">
+                    <label>Security Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Authenticate Identity</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="portalSection" style="display: none; width: 100%; min-height: 100vh;">
+        
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>EduMonitor</h2>
+                <span id="userBadge" class="badge excellent">Role</span>
+            </div>
+            <nav class="nav-menu">
+                <div class="role-nav" id="navAdmin" style="display: none;">
+                    <a href="#" class="active" onclick="switchView('adminDashboard')"><span class="icon">⚙️</span> Core Directory</a>
+                    <a href="#" onclick="openModal('provisionModal')"><span class="icon">➕</span> Provision User</a>
+                    <a href="#" onclick="openModal('mapParentModal')"><span class="icon">🔗</span> Map Parent to Student</a>
+                    <a href="#" onclick="openModal('masterSecurityModal')"><span class="icon">🔒</span> Master Security Credentials Override</a>
+                    <a href="#" onclick="openSubjectModal()"><span class="icon">📚</span> Manage Subjects</a>
+                    <a href="#" onclick="openTimetableModal()"><span class="icon">📅</span> Add Timetable</a>
+                    <a href="#" onclick="openModal('feeModal')"><span class="icon">💳</span> Log Billing</a>
+                </div>
+
+                <div class="role-nav" id="navFaculty" style="display: none;">
+                    <a href="#" class="active" onclick="switchView('facultyDashboard')"><span class="icon">📊</span> Faculty Desk</a>
+                    <a href="#" onclick="openModal('enrollStudentModal')"><span class="icon">🤝</span> Enroll Student</a>
+                    <a href="#" onclick="openAttendanceModal()"><span class="icon">✅</span> Mark Attendance</a>
+                    <a href="#" onclick="openModal('performanceModal')"><span class="icon">📝</span> Log Performance</a>
+                    <a href="#" onclick="openModal('assignmentModal')"><span class="icon">📁</span> Upload Assignment</a>
+                    <a href="#" onclick="openModal('facultyBehaviorModal')"><span class="icon">🌟</span> Manage Behavior Score</a>
+                    <a href="#" onclick="openModal('disciplineModal')"><span class="icon">🚨</span> File Disciplinary</a>
+                </div>
+
+                <div class="role-nav" id="navStudent" style="display: none;">
+                    <a href="#" class="active" onclick="switchView('studentDashboard')"><span class="icon">👤</span> Student Desk</a>
+                    <a href="#" onclick="openModal('payFeeModal')"><span class="icon">💸</span> Pay Online Fees</a>
+                    <a href="#" onclick="openModal('submitAssignmentModal')"><span class="icon">📤</span> Turn In Work</a>
+                    <a href="#" onclick="openModal('leaveModal')"><span class="icon">📝</span> File Leave</a>
+                </div>
+
+                <div class="role-nav" id="navParent" style="display: none;">
+                    <a href="#" class="active" onclick="switchView('parentDashboard')"><span class="icon">🏡</span> Parent Portal</a>
+                </div>
+                
+                <a href="#" onclick="handleLogout()" style="margin-top: auto; color: var(--danger);"><span class="icon">🚪</span> Sign Out</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            
+            <section id="viewAdminDashboard" class="portal-view" style="display: none;">
+                <header class="top-bar"><h1>ERP Administration Center</h1></header>
+                
+                <div class="card profile-hero-card animate-pop" style="margin-bottom: 2rem;">
+                    <div class="profile-avatar-circle">ADM</div>
+                    <div class="profile-details-wrapper">
+                        <h2 id="adminProfileName">System Administrator Root</h2>
+                        <p><strong>System ID:</strong> <span id="adminProfileId">ADMIN01</span> | <strong>Role Unit:</strong> Central Operations Dashboard</p>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="card metric-card"><h3>Directory Log Count</h3><p id="adminStatUsers">0</p></div>
+                </div>
+                <div class="card table-card" style="margin-bottom: 2rem;">
+                    <div class="table-header"><h2>Active System Users Registry</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>User ID</th><th>Designation</th><th>Created At</th></tr></thead>
+                            <tbody id="adminUserTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card table-card">
+                    <div class="table-header"><h2>Academic Course Catalog Matrix</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Subject Code</th><th>Course Title</th><th>Assigned Faculty ID</th></tr></thead>
+                            <tbody id="adminSubjectTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="viewFacultyDashboard" class="portal-view" style="display: none;">
+                <header class="top-bar"><h1>Academic Cohort Performance Center</h1></header>
+                
+                <div class="card profile-hero-card animate-pop" style="margin-bottom: 2rem; background: linear-gradient(135deg, #1e1b4b, #1f2937);">
+                    <div class="profile-avatar-circle" style="background: var(--success); color: #fff;">FAC</div>
+                    <div class="profile-details-wrapper">
+                        <h2 id="facultyProfileName">Loading...</h2>
+                        <p><strong>Faculty Code ID:</strong> <span id="facultyProfileId">N/A</span> | <strong>Department Unit:</strong> Computer Science & Engineering Core Faculty</p>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="card metric-card"><h3>Total Cohort Size</h3><p id="facStatTotal">0</p></div>
+                    <div class="card metric-card risk"><h3>Low Attendance Defaulters</h3><p id="facStatRisk">0</p></div>
+                </div>
+                <div class="card" style="margin-bottom: 2.5rem; height: 300px; position: relative;">
+                    <canvas id="gradeDistributionChart"></canvas>
+                </div>
+                
+                <div class="card table-card" style="margin-bottom: 2rem;">
+                    <div class="table-header"><h2>Pending Student Leave Applications Workflow</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Application ID</th><th>Student ID</th><th>Start Date</th><th>End Date</th><th>Reason Statement</th><th>Current Status</th><th>Actions Menu</th></tr></thead>
+                            <tbody id="facultyLeaveTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card table-card" style="margin-bottom: 2rem;">
+                    <div class="table-header"><h2>Student Information Ledger Matrix</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Attendance</th><th>Grades</th><th>Behavior Score</th></tr></thead>
+                            <tbody id="facultyStudentTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card table-card">
+                    <div class="table-header"><h2>Subject Course Enrollment Logs</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Student ID</th><th>Course Code</th><th>Internal Mark Reference</th></tr></thead>
+                            <tbody id="facultyEnrollmentTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="viewStudentDashboard" class="portal-view" style="display: none;">
+                <header class="top-bar"><h1>My Dynamic Report Card & Profile</h1></header>
+                
+                <div class="card profile-hero-card animate-pop" style="margin-bottom: 2rem; background: linear-gradient(135deg, #0f172a, #1f2937);">
+                    <div class="profile-avatar-circle" style="background: var(--accent-blue); color: #000;">STU</div>
+                    <div class="profile-details-wrapper">
+                        <h2 id="studentProfileName">Loading...</h2>
+                        <p><strong>Student Enrollment ID:</strong> <span id="studentProfileId">N/A</span> | <strong>Branch Cohort:</strong> B.Tech Computer Science & Engineering</p>
+                    </div>
+                </div>
+
+                <div id="stuWarningAlert" class="card" style="display: none; background: rgba(239, 68, 68, 0.1); border-color: var(--danger); margin-bottom: 2rem;">
+                    <p style="color: var(--danger); font-weight: bold;">⚠️ Alert: Critical Low Performance or Disciplinary Incident Triggers Found.</p>
+                </div>
+                <div class="metrics-grid">
+                    <div class="card metric-card"><h3>Aggregate Total Attendance</h3><p id="stuAttendance">0%</p></div>
+                    <div class="card metric-card"><h3>Cumulative CGPA</h3><p id="stuGPA">0.00</p></div>
+                    <div class="card metric-card"><h3>Behavior Account Score</h3><p id="stuBehavior">100</p></div>
+                </div>
+
+                <div class="card table-card" style="margin-bottom: 2rem;">
+                    <div class="table-header"><h2>Granular Subject-Wise Course Analytics</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Subject Code</th><th>Subject Name</th><th>Course Attendance</th><th>Internals</th><th>Assignments</th><th>Semester Exam</th><th>Subject GPA</th></tr></thead>
+                            <tbody id="studentSubjectGranularTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" style="margin-bottom: 2rem;">
+                    <h2>Day-Wise Structured Class Timetable</h2>
+                    <table style="margin-top: 1rem;">
+                        <thead><tr><th>Day of Week</th><th>Course Subject</th><th>Class Timing Slot</th><th>Location Room</th></tr></thead>
+                        <tbody id="studentTimetableBody"></tbody>
+                    </table>
+                </div>
+                <div class="card table-card" style="margin-bottom: 2rem;">
+                    <div class="table-header"><h2>My Leave Application History Logs</h2></div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr><th>Start Date</th><th>End Date</th><th>Reason Statement</th><th>Approval Status</th></tr></thead>
+                            <tbody id="studentLeaveTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Outstanding Fees Invoice Dues</h2>
+                    <p id="studentFeeInvoice" style="font-size: 1.5rem; margin-top: 1rem; font-weight: bold; color: var(--warning);">₹0.00 Due</p>
+                </div>
+            </section>
+
+            <section id="viewParentDashboard" class="portal-view" style="display: none;">
+                <header class="top-bar"><h1>Parental Oversight Center</h1></header>
+                
+                <div class="card profile-hero-card animate-pop" style="margin-bottom: 2rem; background: linear-gradient(135deg, #1c1917, #1f2937);">
+                    <div class="profile-avatar-circle" style="background: var(--warning); color: #fff;">PAR</div>
+                    <div class="profile-details-wrapper">
+                        <h2 id="parentProfileName">Loading...</h2>
+                        <p><strong>Parent Identity ID:</strong> <span id="parentProfileId">N/A</span> | <strong>Relationship Node:</strong> Official Guardian Directory System</p>
+                    </div>
+                </div>
+
+                <div class="card" style="padding: 2rem; margin-bottom: 2rem;">
+                    <h2>Ward Identity Information Details</h2>
+                    <p style="margin-top: 1rem;"><strong>Student Code Name:</strong> <span id="pWardName">N/A</span></p>
+                    <p><strong>Ward Attendance Standing:</strong> <span id="pWardAttendance">0%</span></p>
+                    <p><strong>Ward Performance Grade:</strong> <span id="pWardGrade">N/A</span></p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="masterSecurityModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Master Security Overrides Control Center</h2><button class="close-btn" onclick="closeModal('masterSecurityModal')">&times;</button></div>
+            <form id="masterSecurityForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Target Account User ID Code</label><input type="text" id="secTargetId" required placeholder="e.g., STU101, FAC201"></div>
+                    <div class="form-group"><label>Action Desired</label>
+                        <select id="secActionType" onchange="toggleSecurityInputs()" required>
+                            <option value="UPDATE_PASSWORD">Modify Security Password</option>
+                            <option value="REASSIGN_ID">Reassign Primary Account ID Code</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="secDynamicWrapper" style="margin-bottom: 1.5rem;">
+                    <label id="secDynamicLabel">New Password String</label>
+                    <input type="text" id="secValueInput" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Execute Master Credential Overwrite</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="mapParentModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Map Parent to Student ID</h2><button class="close-btn" onclick="closeModal('mapParentModal')">&times;</button></div>
+            <form id="mapParentForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Parent User ID</label><input type="text" id="mapParentId" required placeholder="e.g., PAR401"></div>
+                    <div class="form-group"><label>Target Student User ID</label><input type="text" id="mapStudentId" required placeholder="e.g., STU101"></div>
+                </div>
+                <button type="submit" class="btn-primary">Establish Relational Link</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="facultyBehaviorModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Manage Student Behavior Score</h2><button class="close-btn" onclick="closeModal('facultyBehaviorModal')">&times;</button></div>
+            <form id="facultyBehaviorForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Student ID Target</label><input type="text" id="behStudentId" required placeholder="e.g., STU101"></div>
+                    <div class="form-group"><label>Action Type</label>
+                        <select id="behActionType" required>
+                            <option value="ADD">Commend (Add Points)</option>
+                            <option value="DEDUCT">Penalize (Deduct Points)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Points Delta Scale Value</label><input type="number" id="behPointsValue" min="1" max="100" required></div>
+                <button type="submit" class="btn-primary">Update Account Score</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="enrollStudentModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Enroll Student to Course</h2><button class="close-btn" onclick="closeModal('enrollStudentModal')">&times;</button></div>
+            <form id="enrollStudentForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Target Student ID</label><input type="text" id="enrollStudentId" required placeholder="e.g., STU101"></div>
+                    <div class="form-group"><label>Target Subject Code</label><select id="enrollSubjectSelect" required></select></div>
+                </div>
+                <button type="submit" class="btn-primary">Bind Student Enrollment</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="subjectModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Manage Subjects Catalog</h2><button class="close-btn" onclick="closeModal('subjectModal')">&times;</button></div>
+            <form id="subjectForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Subject Code</label><input type="text" id="subCode" required placeholder="e.g., CSE-301"></div>
+                    <div class="form-group"><label>Subject Title Name</label><input type="text" id="subTitle" required placeholder="e.g., Operating Systems"></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Assign Faculty Member</label><select id="subFacultySelect" required></select></div>
+                <button type="submit" class="btn-primary">Commit Course Configuration</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="provisionModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Provision Access Profile</h2><button class="close-btn" onclick="closeModal('provisionModal')">&times;</button></div>
+            <form id="provisionForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Account ID</label><input type="text" id="pId" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="pPassword" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Account Designation Type</label>
+                        <select id="pRole" required>
+                            <option value="STUDENT">STUDENT</option><option value="FACULTY">FACULTY</option><option value="PARENT">PARENT</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Full Legal Name</label><input type="text" id="pName" required></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Email Contacts</label><input type="email" id="pEmail" required></div>
+                <button type="submit" class="btn-primary">Commit Registry Node</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="markAttendanceModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Mark Attendance Records</h2><button class="close-btn" onclick="closeModal('markAttendanceModal')">&times;</button></div>
+            <form id="attendanceForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Select Subject</label>
+                        <select id="attSubjectSelect" onchange="fetchEnrolledStudentsForAttendance()" required></select>
+                    </div>
+                    <div class="form-group"><label>Target Enrolled Student</label>
+                        <select id="attStudentSelect" required><option value="">-- Choose Subject First --</option></select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Status</label>
+                    <select id="attStatus" required><option value="PRESENT">PRESENT</option><option value="ABSENT">ABSENT</option></select>
+                </div>
+                <button type="submit" class="btn-primary">Commit Attendance Row</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="performanceModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Log Performance Metrics</h2><button class="close-btn" onclick="closeModal('performanceModal')">&times;</button></div>
+            <form id="performanceForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Student ID Target</label><input type="text" id="perfStudentId" required></div>
+                    <div class="form-group"><label>Subject Code</label><select id="perfSubjectSelect" required></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Internal Marks (Out of 20)</label><input type="number" id="perfInternal" min="0" max="20" required></div>
+                    <div class="form-group"><label>Assignment Marks (Out of 30)</label><input type="number" id="perfAssignment" min="0" max="30" required></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Semester Written Exam Marks (Out of 50)</label><input type="number" id="perfSemester" min="0" max="50" required></div>
+                <button type="submit" class="btn-primary">Log Records & Recompute GPA</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="disciplineModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Log Disciplinary Incident</h2><button class="close-btn" onclick="closeModal('disciplineModal')">&times;</button></div>
+            <form id="disciplineForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Student ID Target</label><input type="text" id="discStudentId" required></div>
+                    <div class="form-group"><label>Demerit Penalty Points</label><input type="number" id="discPoints" required></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Description Statement</label><input type="text" id="discDesc" required></div>
+                <button type="submit" class="btn-primary">Log Disciplinary Action</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="timetableModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Log Roster Entry</h2><button class="close-btn" onclick="closeModal('timetableModal')">&times;</button></div>
+            <form id="timetableForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Type</label>
+                        <select id="ttType" required><option value="CLASS">CLASS</option><option value="EXAM">EXAM</option></select>
+                    </div>
+                    <div class="form-group"><label>Subject Code</label><select id="ttSubjectSelect" required></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Schedule Day</label>
+                        <select id="ttDay" required>
+                            <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Time Window Segment Slot</label>
+                        <select id="ttSlot" required>
+                            <option value="09:00 AM - 10:00 AM">09:00 AM - 10:00 AM</option>
+                            <option value="10:00 AM - 11:00 AM">10:00 AM - 11:00 AM</option>
+                            <option value="11:15 AM - 12:15 PM">11:15 AM - 12:15 PM</option>
+                            <option value="01:00 PM - 02:00 PM">01:00 PM - 02:00 PM</option>
+                            <option value="02:00 PM - 03:00 PM">02:00 PM - 03:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Room/Location</label><input type="text" id="ttRoom" required></div>
+                <button type="submit" class="btn-primary">Log Roster Item</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="feeModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Log Student Invoice Statement</h2><button class="close-btn" onclick="closeModal('feeModal')">&times;</button></div>
+            <form id="feeForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Student ID Target</label><input type="text" id="feeStudentId" required></div>
+                    <div class="form-group"><label>Total Outstanding Invoiced Amount (₹)</label><input type="number" id="feeAmount" placeholder="Amount in Indian Rupees" required></div>
+                </div>
+                <button type="submit" class="btn-primary">Publish Billing Invoice</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="assignmentModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Publish New Assignment</h2><button class="close-btn" onclick="closeModal('assignmentModal')">&times;</button></div>
+            <form id="assignmentForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Assignment Title</label><input type="text" id="assignTitle" required></div>
+                    <div class="form-group"><label>Subject Code Code</label><select id="assignSubjectSelect" required></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Due Date Deadline String</label><input type="date" id="assignDue" required></div>
+                    <div class="form-group"><label>Resource URL / Attachment Path (Optional)</label><input type="text" id="assignAttachment" placeholder="e.g., https://drive.google.com/pdf_resource"></div>
+                </div>
+                <button type="submit" class="btn-primary">Publish Assignment Node</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="submitAssignmentModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Turn In Assignment Work</h2><button class="close-btn" onclick="closeModal('submitAssignmentModal')">&times;</button></div>
+            <form id="submitAssignmentForm">
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Assignment Numeric ID</label><input type="number" id="subAssignId" required></div>
+                <button type="submit" class="btn-primary">Turn In Assignment Work</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="leaveModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>File Leave Request Application</h2><button class="close-btn" onclick="closeModal('leaveModal')">&times;</button></div>
+            <form id="leaveForm">
+                <div class="form-row">
+                    <div class="form-group"><label>Start Date</label><input type="date" id="leaveStart" required></div>
+                    <div class="form-group"><label>End Date</label><input type="date" id="leaveEnd" required></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;"><label>Reason Statement Statement</label><input type="text" id="leaveReason" required></div>
+                <button type="submit" class="btn-primary">File Leave Request</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="payFeeModal">
+        <div class="modal-box">
+            <div class="modal-header"><h2>Process Online Tuition Fees Payment</h2><button class="close-btn" onclick="closeModal('payFeeModal')">&times;</button></div>
+            <form id="payFeeForm">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label>Amount to Remit (₹)</label>
+                    <input type="number" id="payFeeAmount" placeholder="Enter amount to pay live" min="1" required>
+                </div>
+                <button type="submit" class="btn-primary">Authorize Online Transaction Clear</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
