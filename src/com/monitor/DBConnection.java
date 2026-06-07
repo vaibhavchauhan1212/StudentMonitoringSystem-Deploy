@@ -4,8 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnection {
-    private static final String URL = "jdbc:mysql://host.docker.internal:3306/student_monitor_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";    private static final String USER = "root"; 
-    private static final String PASSWORD = "root"; 
+
+    private static final String URL =
+        "jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+    private static final String USER = "root";
+
+    private static final String PASSWORD = "qNpglkNeTjPBoejzhqgmnauiGgLdxoWp";
 
     public static Connection getConnection() {
         Connection connectionInstance = null;
@@ -14,6 +19,7 @@ public class DBConnection {
             connectionInstance = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (Exception e) {
             System.err.println("JDBC Connection Error: " + e.getMessage());
+            e.printStackTrace();
         }
         return connectionInstance;
     }
