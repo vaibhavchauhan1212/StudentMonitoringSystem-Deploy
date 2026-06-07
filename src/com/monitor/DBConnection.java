@@ -14,13 +14,20 @@ public class DBConnection {
 
     public static Connection getConnection() {
         Connection connectionInstance = null;
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connectionInstance = DriverManager.getConnection(URL, USER, PASSWORD);
+
+            System.out.println("CONNECTING TO: " + URL);
+
+            connectionInstance =
+                DriverManager.getConnection(URL, USER, PASSWORD);
+
         } catch (Exception e) {
             System.err.println("JDBC Connection Error: " + e.getMessage());
             e.printStackTrace();
         }
+
         return connectionInstance;
     }
 }
